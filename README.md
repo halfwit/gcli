@@ -32,3 +32,8 @@ Additionally, you also have to create a Custom Search Engine itself.
 Store these keys in your Factotum
 `gcli` - your API key (AIza...)
 `gcse` - your CSE key
+
+## Performance (Subjective)
+
+Using this, I was able to complete a search with 50 results, in 0.03 seconds.
+A similar search on the popular Python program `googler` was roughly 0.19 seconds.
