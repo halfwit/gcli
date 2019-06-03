@@ -31,6 +31,8 @@ To use this, you need an API key for Google Custom Search engine.
 See https://developers.google.com/custom-search/v1/introduction, select "Get A Key"
 
 Additionally, you also have to create a Custom Search Engine itself.
+When you create a Custom Search Engine, you'll also get a `cx` key.
+
 Store these keys in your Factotum
  - `gcli` - your API key (AIza...)
  - `gcse` - your CSE key
