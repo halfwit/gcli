@@ -28,7 +28,6 @@ type items struct {
 }
 
 type image struct {
-	ContextLink string
 	ThumbnailLink string
 }
 	
@@ -54,11 +53,11 @@ func keys() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	key, err := libauth.Getuserpasswd("proto=pass service=gcli user=%s", u.Username)
+	key, err := libauth.Getuserpasswd("proto=pass role=client service=gcli user=%s", u.Username)
 	if err != nil {
 		return "", "", err
 	}
-	cx, err := libauth.Getuserpasswd("proto=pass service=gcse user=%s", u.Username)
+	cx, err := libauth.Getuserpasswd("proto=pass role=client service=gcse user=%s", u.Username)
 	if err != nil {
 		return "", "", err
 	}
@@ -133,17 +132,16 @@ func buildurl(key, cx string, start int) string {
 func handle(r results, lines chan string) {
 	for _, item := range r.Items {
 		var line strings.Builder
-		line.WriteString(fmt.Sprintf("%s %s", item.Title, item.Link))
+		line.WriteString(fmt.Sprintf("%s - %s", item.Title, item.Link))
+		if *thumb {
+			line.WriteString(fmt.Sprintf(" %s", 
+				item.Image.ThumbnailLink,
+			))
+		}
 		if *snippet {
 			snip := strings.Replace(item.Snippet, "\n", " ", -1)
 			line.WriteString(snip)
 			line.WriteString("\n")
-		}
-		if *isearch {
-			line.WriteString(fmt.Sprintf("%s %s", 
-				item.Image.ContextLink, 
-				item.Image.ThumbnailLink,
-			))
 		}
 		lines <- line.String()	
 	}
