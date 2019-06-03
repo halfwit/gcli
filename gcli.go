@@ -30,7 +30,7 @@ type items struct {
 type image struct {
 	ThumbnailLink string
 }
-	
+
 var (
 	nmax = flag.Int("m", 50, "Number of results per query")
 	related = flag.String("r", "", "Search for sites related to [url]")
@@ -46,6 +46,9 @@ var (
 	safe =    flag.String("s", "off", "Safe search [active|high|medium|off]")
 	snippet = flag.Bool("sn", false, "Include short description in results")
 	thumb =   flag.Bool("t", false, "Include thumbnails")
+	
+	base = "https://www.googleapis.com/customsearch/v1?maxResults=10"
+	fields = "items/title,items/link,items/snippet"	
 )
 
 func keys() (string, string, error) {
@@ -66,7 +69,7 @@ func keys() (string, string, error) {
 
 func search(url string, re *results) error {
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 15 * time.Second,
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -90,10 +93,9 @@ func buildurl(key, cx string, start int) string {
 	var opts strings.Builder
 
 	query := strings.Join(flag.Args(), "+")
-	url := fmt.Sprintf("https://www.googleapis.com/customsearch/v1?key=%s&start=%d&maxResults=10&cx=%s&q=%s", key, start, cx, query)
-
 	switch {
 	case *isearch:
+		fields="items/title,items/link,items/snippet,items/image/thumbnailLink"
 		opts.WriteString("&searchType=image")
 	case *itype != "":
 		if *isearch {
@@ -126,6 +128,7 @@ func buildurl(key, cx string, start int) string {
 		opts.WriteString("&fileType=")
 		opts.WriteString(*ftype)
 	}
+	url := fmt.Sprintf("%s&key=%s&start=%d&cx=%s&q=%s&fields=%s", base, key, start, cx, query, fields)
 	return url+opts.String()
 }
 
