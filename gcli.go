@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"bitbucket.org/mischief/libauth"
+	"github.com/Plan9-Archive/libauth"
 )
 
 type results struct {
